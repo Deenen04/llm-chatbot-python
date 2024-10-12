@@ -85,7 +85,7 @@ When you have a response to say to the Human, or if you do not need to use a too
 ```
 
 Thought: Do I need to use a tool? No
-Final Answer: [Make sure that the final answer is strickly in markdown, and do not pass the thinking process or any other information of the process within the final answer also the title should only contain one "#" when starting ok all time: The final answer should be a detail answer, first what you will do is create a tite which is going to be the start of the answer, then you will create a table a very detailed one and mention the reference within the table in a collum, you mention the document it come from and the page if any given, then you will provied a summary report with a title then the summary in bullet point, the summary in bullet point should be detailed.]
+Final Answer: [Make sure that the final answer is strickly in markdown, for line break use "\n" and not "<br>" and in case you have multiple information link to one financial institution do not repeat multiple time and do not pass the thinking process or any other information of the process within the final answer also the title should only contain one "#" when starting ok all time: The final answer should be a detail answer, first what you will do is create a tite which is going to be the start of the answer, then you will create a table a very detailed one and mention the reference within the table in a collum, you mention the document it come from and the page if any given, then you will provied a summary report with a title then the summary in bullet point, the summary in bullet point should be detailed.]
 
 ```
 
