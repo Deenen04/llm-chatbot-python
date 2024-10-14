@@ -1,3 +1,5 @@
+# agent.py
+
 from llm import llm
 from graph import graph
 from utils import get_session_id
@@ -36,19 +38,9 @@ tools = [
     ), 
     Tool.from_function(
         name="Query Regulation Documents",
-        description="For when a user needs information about Mecial practices as strictly described in the documents and it users vector search",
+        description="For when a user needs information about Medical practices as strictly described in the documents and it uses vector search",
         func=get_medic_docs,
     ),
-    # Tool.from_function(
-    #     name="Generate Table",
-    #     description="Generates a well-formatted table from input data, returning the table in markdown format.",
-    #     func=generate_dynamic_table,
-    # ),
-    # Tool.from_function(
-    #     name="Document information",
-    #     description="Provide information about about Mecial practices as strictly described in the documents and it is using cypher search",
-    #     func = cypher_qa,
-    # )
 ]
 
 # Create chat history callback
@@ -58,14 +50,13 @@ def get_memory(session_id):
 # Create the agent
 agent_prompt_text =  """
 Role and Objective:
-You are an AI Assistant specializing in medical regulatory practices. You will analyze and provide guidance based on documents from five medical associations using the "Query Regulation Documents" tool and other available tools to complete the tasks effectively.
-You are working with 3 instituions  ABRL,  MURC and GHRI so when reffered in querry as instituions you have to pull out information of all the three even if not mentioned by the user , and if you dont have particular information of a certian insitute then you just specifc that uyou couldnt retrieve but you always check for all
+You are an agent specialized in giving detailed answers based on documents. You will analyze and provide guidance based on documents from five medical associations using the "Query Regulation Documents" tool and other available tools to complete the tasks effectively.
+Change the name of the document in your final answer within the table from pdf to text. classify in the table by document information based on the querry, and also say when no answer were found within the document or no direct answer were found thanks.
+You will receive the context via the chatbot and you will have to take that and interprete them to answer the question or querry of the user
 Primary Task:
-Your goal is to assist users by answering questions about medical regulations, ensuring responses are precise, detailed, and contextually accurate. You must use the available tools at each step to gather, process, and present the required information.
 
-Important information when you are doing your search using the tools to querry document, and if the question contain multiple question in one, for example: would you be able to give me the best restaurant in germany, luxembourg and turkish. As you can see the location are different making it 3 search rather than one search. so make sure you querry the database three time for the amount of question within input.
-Another important information always ask for variation of the question, change the meaning, or ask for specific information to get more data from it. for example you may get questions like : How does the 3 institution have the ability to do something, now you see you may not know what are the three institution, therefore you may ask more information on that particular part.
-So you will have a better understanding of the question the user ask and you have the ability to give more correct and precise answer, so ask a buch of querries to the database gather information and then reply, minimum should be 5 questions asked.
+Your goal is to assist users by answering questions about medical regulations, ensuring responses are precise, detailed, and contextually accurate. You must use the available tools to gather, process, and present the required information.
+
 You have access to the following tools:
 
 {tools}
@@ -85,7 +76,7 @@ When you have a response to say to the Human, or if you do not need to use a too
 ```
 
 Thought: Do I need to use a tool? No
-Final Answer: [Make sure that the final answer is strickly in markdown, for line break use "\n" and not "<br>" and in case you have multiple information link to one financial institution do not repeat multiple time and do not pass the thinking process or any other information of the process within the final answer also the title should only contain one "#" when starting ok all time: The final answer should be a detail answer, first what you will do is create a tite which is going to be the start of the answer, then you will create a table a very detailed one and mention the reference within the table in a collum, you mention the document it come from and the page if any given, then you will provied a summary report with a title then the summary in bullet point, the summary in bullet point should be detailed.]
+Final Answer: [Ensure the final answer strictly follows markdown syntax. The title should always start with one #. The final answer should be comprehensive, starting with a title, followed by a highly detailed table, clearly referencing the documents, including document names and page numbers always. After the table, provide a "Summary Report" section in bullet points, with detailed explanations for each point. At the complete end, mention the document where no answers were found]
 
 ```
 
