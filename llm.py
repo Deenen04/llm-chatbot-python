@@ -12,9 +12,9 @@ llm = ChatOpenAI(
 
 # Create the Embedding model
 
-# embeddings = OpenAIEmbeddings(
-#     openai_api_key=st.secrets["OPENAI_API_KEY"]
-# )
+embeddings = OpenAIEmbeddings(
+    openai_api_key=st.secrets["OPENAI_API_KEY"]
+)
 
 # import streamlit as st
 # from sentence_transformers import SentenceTransformer
