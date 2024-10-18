@@ -70,9 +70,29 @@ from llm import embeddings
 # def create_embedding2(content):
 #     return embeddings.embed_query([content])[0]  # Generate embeddings using OpenAI Embeddings
 
+from neo4j import GraphDatabase
 
-# Example of using the function to create the index and search
-if __name__ == "__main__":
-    create_vector_index()  # Run this once to store embeddings in Neo4j
-    user_query = "How often do I need to backup data? Please detail answer Regulatory Requirements"
-    query_vector_index(user_query)  # Perform search based on user's query
+# Establish Neo4j connection
+driver = GraphDatabase.driver(st.secrets["NEO4J_URI"], auth=("neo4j", st.secrets["NEO4J_PASSWORD"]))
+
+def create_vector_index():
+    try:
+        with driver.session() as session:
+            session.run("""
+            CREATE INDEX vector IF NOT EXISTS
+            FOR (d:Chunk)
+            ON (d.embedding)
+            """)
+            print("Vector index created successfully")
+    finally:
+        # Ensure the driver is closed after completing the process
+        driver.close()
+# Call the function to create the vector index
+create_vector_index()
+
+
+# # Example of using the function to create the index and search
+# if __name__ == "__main__":
+#     create_vector_index()  # Run this once to store embeddings in Neo4j
+#     user_query = "How often do I need to backup data? Please detail answer Regulatory Requirements"
+#     query_vector_index(user_query)  # Perform search based on user's query
