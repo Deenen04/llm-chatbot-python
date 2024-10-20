@@ -1,0 +1,13 @@
+actions for llm-chatbot-python
+
+Commit title: EH:: Error: Vector index Name does not exist: Actions: Fixed vector error, s3 bucket upload, nav bar
+
+Steps.
+1. ER1: Check if Vector index exists: Found not to exist
+2. SOLN1: Create vector index with vector name, `vector`: Edit in vectorIndex.py to create VECTOR INDEX: "vector": Successfully created.
+3. ER2,SOLN2: Embedding function(384) and vector index dimensions(1536) do not match: Drop old "vector" index to create new index, "vector" with 384 as its dimensions: Successfully fixed dimension mismatch: refer to vectorIndex.py
+4. ER3: st.set_page_config() can only be called once per app page: There was a conflict between the st.set_page_config() and st.file_uploader(), these two should not exist in the same file
+5. SOLN3: Remove st.file_uploader from bot.py and replace it probably with a button, while the file_uploader is in a different file: Created a different page to handle upload
+6. UP1: Add storage of uploaded regulatory documents to S3 bucket, "medicalregdocs": benjamin.mutebi@ue-ermany.de: So that we have a standard and all accessible storage of reg documents.
+7. UP2: Added the nav bar to navigate between document upload and chating with assistant.
+

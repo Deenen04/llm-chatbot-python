@@ -8,7 +8,7 @@ from langchain_community.vectorstores.neo4j_vector import Neo4jVector
 neo4jvector = Neo4jVector.from_existing_index(
     model,                              # (1)
     graph=graph,                             # (2)
-    index_name="vector",                 # (3)
+    index_name= "vector",                 # (3) After relationships have been created
     node_label="Chunk",                      # (4)
     text_node_property="content",               # (5)
     embedding_node_property="embedding", # (6)
