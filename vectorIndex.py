@@ -83,7 +83,7 @@ def create_vector_index():
             FOR (d:Document)
             ON d.embedding
             OPTIONS { indexConfig: {
-            `vector.dimensions`: 384,
+            `vector.dimensions`: 1536,
             `vector.similarity_function`: 'cosine'
             }}
             """)
