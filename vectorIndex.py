@@ -41,10 +41,10 @@ def query_vector_index(user_query):
     medical_vector_index = Neo4jVector.from_existing_index(
         create_embedding,
         graph=graph,
-        index_name="vector",
-        node_label="Document",  # The node label is now "Document"
-        text_node_property="content",  # The text property that holds the document content
-        embedding_node_property="contentEmbedding"  # The property storing the vector embeddings
+        index_name= "vector",                 # (3) After relationships have been created
+        node_label="Chunk",                      # (4)
+        text_node_property="content",               # (5)
+        embedding_node_property="embedding", # The property storing the vector embeddings
     )
 
     # Perform similarity search with the user's query
@@ -70,29 +70,29 @@ from llm import embeddings
 # def create_embedding2(content):
 #     return embeddings.embed_query([content])[0]  # Generate embeddings using OpenAI Embeddings
 
-from neo4j import GraphDatabase
+# from neo4j import GraphDatabase
 
-# Establish Neo4j connection
-driver = GraphDatabase.driver(st.secrets["NEO4J_URI"], auth=("neo4j", st.secrets["NEO4J_PASSWORD"]))
+# # Establish Neo4j connection
+# driver = GraphDatabase.driver(st.secrets["NEO4J_URI"], auth=("neo4j", st.secrets["NEO4J_PASSWORD"]))
 
-def create_vector_index():
-    try:
-        with driver.session() as session:
-            session.run("""
-            CREATE VECTOR INDEX vector IF NOT EXISTS
-            FOR (d:Document)
-            ON d.embedding
-            OPTIONS { indexConfig: {
-            `vector.dimensions`: 1536,
-            `vector.similarity_function`: 'cosine'
-            }}
-            """)
-            print("Vector index created successfully")
-    finally:
-        # Ensure the driver is closed after completing the process
-        driver.close()
-# Call the function to create the vector index
-create_vector_index()
+# def create_vector_index():
+#     try:
+#         with driver.session() as session:
+#             session.run("""
+#             CREATE VECTOR INDEX vector IF NOT EXISTS
+#             FOR (d:Document)
+#             ON d.embedding
+#             OPTIONS { indexConfig: {
+#             `vector.dimensions`: 1536,
+#             `vector.similarity_function`: 'cosine'
+#             }}
+#             """)
+#             print("Vector index created successfully")
+#     finally:
+#         # Ensure the driver is closed after completing the process
+#         driver.close()
+# # Call the function to create the vector index
+# create_vector_index()
 
 
 # # Example of using the function to create the index and search
