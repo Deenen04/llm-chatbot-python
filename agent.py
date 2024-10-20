@@ -31,11 +31,11 @@ medic_chat = chat_prompt | llm | LenientOutputParser()
 
 # Create a set of tools
 tools = [
-    Tool.from_function(
-        name="General Chat",
-        description="For general medical inquiries not covered by other tools",
-        func=medic_chat.invoke,
-    ), 
+    # Tool.from_function(
+    #     name="General Chat",
+    #     description="For general medical inquiries not covered by other tools",
+    #     func=medic_chat.invoke,
+    # ), 
     Tool.from_function(
         name="Query Regulation Documents",
         description="For when a user needs information about Medical practices as strictly described in the documents and it uses vector search",
@@ -85,11 +85,12 @@ Final Answer: [Ensure the final answer strictly follows markdown syntax. The tit
 ```
 
 Additional Context:
-Previous Conversation History: {chat_history}
 New Input: {input}
 Agent Scratchpad: {agent_scratchpad}
 
 """
+#Previous Conversation History: {chat_history}
+
 
 agent_prompt = PromptTemplate.from_template(agent_prompt_text)
 agent = create_react_agent(llm, tools, agent_prompt)
