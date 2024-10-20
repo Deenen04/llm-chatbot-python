@@ -10,23 +10,23 @@ neo4jvector = Neo4jVector.from_existing_index(
     graph=graph,                             # (2)
     index_name="vector",                 # (3)
     node_label="Chunk",                      # (4)
-    text_node_property="text",               # (5)
+    text_node_property="content",               # (5)
     embedding_node_property="embedding", # (6)
     retrieval_query="""
     MATCH (node:Chunk)
-    WHERE node.fileName IS NOT NULL
+    WHERE node.file_name IS NOT NULL
     RETURN
-        node.text AS text,
+        node.content AS text,
         score,
         {
-            document_name: node.fileName,
+            document_name: node.file_name,
             page_number: COALESCE(node.page_number, 'N/A')
         } AS metadata
     """
 )
 
 # Create the retriever
-retriever = neo4jvector.as_retriever(search_type="similarity", search_kwargs={"k": 7})  # Adjust "k" to retrieve more chunks
+retriever = neo4jvector.as_retriever(search_type="similarity", search_kwargs={"k": 4})  # Adjust "k" to retrieve more chunks
 
 # Create the prompt
 from langchain_core.prompts import ChatPromptTemplate
@@ -67,11 +67,13 @@ def get_medic_docs(input):
     for document in documents:
         retrieval_query = f"""
         MATCH (node:Chunk) 
-        WHERE node.fileName = '{document}' 
-        RETURN node.text AS text, score, {{ document_name: node.fileName, page_number: COALESCE(node.page_number, 'N/A') }} AS metadata
+        WHERE node.file_name = '{document}' 
+        RETURN node.content AS text, score, {{ document_name: node.file_name, page_number: COALESCE(node.page_number, 'N/A') }} AS metadata
         """
         neo4jvector.retrieval_query = retrieval_query
-        result = retriever.get_relevant_documents(input)
+        
+        # Pass `input` directly as a string instead of a dictionary
+        result = retriever.invoke(input)
 
         # Log the retrieved chunks for debugging
         if isinstance(result, list):
