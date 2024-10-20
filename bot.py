@@ -2,21 +2,12 @@ import streamlit as st
 import time
 from utils import write_message
 from agent import generate_response
-from upload import upload_file_to_s3_and_neo4j  # Updated to S3 upload
 
 # Page Config
 st.set_page_config(page_title="Medical RAG", page_icon=":hospital:")
 
-# Create a sidebar for navigation between chat and upload pages
-page = st.sidebar.selectbox("Navigate", ["Chat with Assistant", "Upload Files"])
-
-def handle_file_upload(uploaded_file):
-    if uploaded_file is not None:
-        try:
-            # Upload file to S3 and process with Neo4j
-            upload_file_to_s3_and_neo4j(uploaded_file)
-        except Exception as e:
-            st.error(f"File upload failed: {str(e)}")
+# Create a sidebar for navigation between pages (without the upload page)
+page = st.sidebar.selectbox("Navigate", ["Chat with Assistant"])
 
 # Set up Session State for Chat Page
 if page == "Chat with Assistant":
@@ -64,12 +55,3 @@ if page == "Chat with Assistant":
 
         # Generate a response
         handle_submit(question)
-
-# Upload page for uploading files to S3 and Neo4j
-elif page == "Upload Files":
-    st.title("Upload Medical Documents")
-    uploaded_file = st.file_uploader("Upload a file for embedding and analysis", type=["pdf", "txt", "docx"])
-
-    # Handle file upload and processing
-    if uploaded_file:
-        handle_file_upload(uploaded_file)

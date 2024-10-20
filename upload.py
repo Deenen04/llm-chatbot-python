@@ -42,7 +42,7 @@ import os
 import boto3
 from docx import Document
 from neo4j import GraphDatabase
-from llm import embeddings
+from llm import model
 
 # Initialize S3 client
 s3_client = boto3.client(
@@ -92,7 +92,7 @@ def extract_text(file_path):
 
 # 4. Generate OpenAI Embeddings
 def generate_embeddings(text):
-    return embeddings.embed_query(text)
+    return model.embed_query(text)
 
 # 5. Create and Upload to Neo4j with Chunk Handling
 def upload_to_neo4j(file_name, chunks):
