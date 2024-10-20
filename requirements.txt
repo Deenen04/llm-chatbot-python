@@ -9,3 +9,6 @@ langchain-community==0.2.4
 sentence-transformers
 torch
 transformers
+python-docx==0.8.11
+pymupdf==1.23.6
+boto3

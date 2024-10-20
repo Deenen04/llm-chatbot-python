@@ -7,33 +7,33 @@ from langchain_community.vectorstores.neo4j_vector import Neo4jVector
 
 # Function to create and store embeddings for the existing documents in Neo4j
 # Function to create embeddings for the existing documents in Neo4j
-def create_vector_index():
-    try:
-        # Step 1: Connect to Neo4j and retrieve documents
-        with graph._driver.session() as session:
-            result = session.run("MATCH (doc:Document) WHERE doc.content IS NOT NULL RETURN doc.content AS content, id(doc) AS doc_id")
+# def create_vector_index():
+#     try:
+#         # Step 1: Connect to Neo4j and retrieve documents
+#         with graph._driver.session() as session:
+#             result = session.run("MATCH (doc:Document) WHERE doc.content IS NOT NULL RETURN doc.content AS content, id(doc) AS doc_id")
 
-            for record in result:
-                content = record["content"]
-                doc_id = record["doc_id"]
+#             for record in result:
+#                 content = record["content"]
+#                 doc_id = record["doc_id"]
 
-                # Skip if content is None or empty
-                if not content:
-                    print(f"Skipping document with ID {doc_id} due to missing content")
-                    continue
+#                 # Skip if content is None or empty
+#                 if not content:
+#                     print(f"Skipping document with ID {doc_id} due to missing content")
+#                     continue
 
-                # Step 2: Generate embeddings for the document content
-                content_embedding = create_embedding(content)
+#                 # Step 2: Generate embeddings for the document content
+#                 content_embedding = create_embedding(content)
 
-                # Step 3: Store the embeddings back into Neo4j
-                session.run("""
-                    MATCH (doc:Document)
-                    WHERE id(doc) = $doc_id
-                    SET doc.contentEmbedding = $content_embedding
-                """, doc_id=doc_id, content_embedding=content_embedding)
-    finally:
-        # Ensure the driver is closed after completing the process
-        graph._driver.close()
+#                 # Step 3: Store the embeddings back into Neo4j
+#                 session.run("""
+#                     MATCH (doc:Document)
+#                     WHERE id(doc) = $doc_id
+#                     SET doc.contentEmbedding = $content_embedding
+#                 """, doc_id=doc_id, content_embedding=content_embedding)
+#     finally:
+#         # Ensure the driver is closed after completing the process
+#         graph._driver.close()
 
 
 # Function to query the vector index for relevant answers based on user queries
@@ -70,9 +70,33 @@ from llm import embeddings
 # def create_embedding2(content):
 #     return embeddings.embed_query([content])[0]  # Generate embeddings using OpenAI Embeddings
 
+from neo4j import GraphDatabase
 
-# Example of using the function to create the index and search
-if __name__ == "__main__":
-    create_vector_index()  # Run this once to store embeddings in Neo4j
-    user_query = "How often do I need to backup data? Please detail answer Regulatory Requirements"
-    query_vector_index(user_query)  # Perform search based on user's query
+# Establish Neo4j connection
+driver = GraphDatabase.driver(st.secrets["NEO4J_URI"], auth=("neo4j", st.secrets["NEO4J_PASSWORD"]))
+
+def create_vector_index():
+    try:
+        with driver.session() as session:
+            session.run("""
+            CREATE VECTOR INDEX vector IF NOT EXISTS
+            FOR (d:Document)
+            ON d.embedding
+            OPTIONS { indexConfig: {
+            `vector.dimensions`: 384,
+            `vector.similarity_function`: 'cosine'
+            }}
+            """)
+            print("Vector index created successfully")
+    finally:
+        # Ensure the driver is closed after completing the process
+        driver.close()
+# Call the function to create the vector index
+create_vector_index()
+
+
+# # Example of using the function to create the index and search
+# if __name__ == "__main__":
+#     create_vector_index()  # Run this once to store embeddings in Neo4j
+#     user_query = "How often do I need to backup data? Please detail answer Regulatory Requirements"
+#     query_vector_index(user_query)  # Perform search based on user's query
