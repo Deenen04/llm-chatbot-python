@@ -1,12 +1,12 @@
 import streamlit as st
-from llm import llm, model
+from llm import llm, embeddings
 from graph import graph
 
 # Create the Neo4jVector
 from langchain_community.vectorstores.neo4j_vector import Neo4jVector
 
 neo4jvector = Neo4jVector.from_existing_index(
-    model,                              # (1)
+    embeddings,                              # (1)
     graph=graph,                             # (2)
     index_name= "vector",                 # (3) After relationships have been created
     node_label="Chunk",                      # (4)
