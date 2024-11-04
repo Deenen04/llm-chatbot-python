@@ -87,9 +87,9 @@ print(user_id)
 # print(get_user(user_id))
 
 # --- CHAT TABLE ---#
-def create_chat(user_id: str, created_at: str = None) -> str:
+def create_chat(user_id: str) -> str:
     try:
-        created_at = created_at or datetime.now().isoformat()
+        created_at = datetime.now().isoformat()
         response = supabase.table("Chat").insert({
             "user_id": user_id,
             "created_at": created_at
@@ -214,7 +214,8 @@ def get_messages_by_chat(chat_id: str):
     :return: A list of message records if found, otherwise an empty list.
     """
     try:
-        response = supabase.table("Message").select("*").eq("chat_id", chat_id).order("created_at", ascending=True).execute()
+        response = supabase.table("Message").select("*").eq("chat_id", chat_id).order("created_at", desc=False).execute()
+        print("Request sent to Supabase")
         return response.data if response.data else []
     except Exception as e:
         print(f"Error retrieving messages for chat_id {chat_id}: {e}")

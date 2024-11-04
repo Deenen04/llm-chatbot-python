@@ -13,27 +13,27 @@ class UserRequest(BaseModel):
     username: str
 
 class MessageRequest(BaseModel):
-    chat_id: UUID
+    chat_id: str
     sender: str
     content: str
 
 class ChatRequest(BaseModel):
-    user_id: UUID
+    user_id: str
 
 class MessageResponse(BaseModel):
-    id: UUID
-    chat_id: UUID
+    id: str
+    chat_id: str
     sender: str
     content: str
     created_at: datetime
 
 # 1. User sign-up/login endpoint
-@app.post("/signup", response_model=UUID)
+@app.post("/signup")
 async def signup(user: UserRequest):
     """
     HTTP Request Javascript:
         async function signup(username) {
-            const response = await fetch('api_url/signup', {
+            const response = await fetch(`${api_url}/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,12 +61,12 @@ async def signup(user: UserRequest):
     raise HTTPException(status_code=500, detail="Unable to create or retrieve user.")
 
 # 2. Create chat endpoint
-@app.post("/chats/", response_model=UUID)
+@app.post("/chats/")
 async def create_new_chat(chat_request: ChatRequest):
     """
     HTTP Request Javascript: 
         async function createChat(userId) {
-            const response = await fetch('https://yourapi.com/chats/', {
+            const response = await fetch(`${api_url}/chats/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -93,12 +93,12 @@ async def create_new_chat(chat_request: ChatRequest):
     raise HTTPException(status_code=500, detail="Unable to create chat.")
 
 # 3. Create message within a chat
-@app.post("/messages/", response_model=UUID)
+@app.post("/messages/")
 async def create_message_endpoint(message_request: MessageRequest):
     """
     HTTP Request Javascript: 
         async function createMessage(chatId, sender, content) {
-            const response = await fetch('https://yourapi.com/messages/', {
+            const response = await fetch(`${api_url}/messages/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ async def get_chat_messages(chat_id: UUID):
     """
     HTTP Request Javascript:
         async function getChatMessages(chatId) {
-            const response = await fetch(`https://yourapi.com/chats/${chatId}/messages`);
+            const response = await fetch(`${api_url}/chats/${chatId}/messages`);
 
             if (response.ok) {
                 const messages = await response.json();
@@ -160,7 +160,7 @@ async def get_chats(user_id: str):
     """
     HTTP Request Javascript:
         async function getUserChats(userId) {
-            const response = await fetch(`https://yourapi.com/chats/${userId}`);
+            const response = await fetch(`${api_url}/chats/${userId}`);
 
             if (response.ok) {
                 const chatIds = await response.json();
