@@ -5,11 +5,7 @@ from graph import graph  # Import the Neo4jGraph connection from graph.py
 
 # List of available documents
 documents = [
-    "Data-Integrity-and-Compliance-With-Current-Good-Manufacturing-Practice-Guidance-for-Industry.pdf",
-    "annex11_01-2011_en_0.pdf",
-    "PI 041-1 Guidance on Data Integrity.pdf",
-    "MHRA_GxP_data_integrity_guide_March_edited_Final.pdf",
-    "21 CFR Part 11 (up to date as of 8-06-2024).pdf"
+    "Standard-operating-procedures-for-pharmaceuticals-good-distribution-and-storage-practices.pdf"
 ]
 
 # Function to get embedding for a query text using llm.py's model
